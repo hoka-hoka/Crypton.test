@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Pagination from '../common/Pagination';
 import Sprite from '../common/Sprite';
+import Preloader from '../common/Preloader';
 import Navigation from './Navigation';
 import List from './List';
 
@@ -13,29 +14,11 @@ import './main.scss';
 class Template extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: viewMode.main, cardList: [] };
+    this.state = { view: viewMode.load, cardList: [] };
   }
-
-  onPageChanged = (data = { currentPage: '1' }) => {
-    const { currentPage } = data;
-    this.getData(`?page=${currentPage}`).then((resp) => {
-      if (!resp?.results) {
-        return;
-      }
-      const peoples = Array.from(resp.results, (item, i) => {
-        const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi) || [];
-        const homeIndex = home[0] || null;
-        return { id: i + 1, name: item.name, homeworld: planets[homeIndex] };
-      });
-      this.setState({ cardList: [...peoples], currentPage: currentPage });
-    });
-  };
 
   componentDidMount = () => {
     this.onPageChanged();
-    this.getData().then((resp) => {
-      // console.log(resp);
-    });
   };
 
   getData = async (method = '', data = false) => {
@@ -63,11 +46,6 @@ class Template extends Component {
     return resp.json();
   };
 
-  changeView = () => {
-    const { history } = window;
-    this.setState({ view: history.state.view });
-  };
-
   updateState = ({ update } = {}) => {
     if (!update) {
       return this.state;
@@ -75,25 +53,52 @@ class Template extends Component {
     return (params) => this.setState(params);
   };
 
+  onPageChanged = (data = { currentPage: '1' }) => {
+    const { currentPage } = data;
+    this.setState({ view: viewMode.load });
+    this.getData(`?page=${currentPage}`).then((resp) => {
+      if (!resp?.results) {
+        return;
+      }
+      const peoples = Array.from(resp.results, (item, i) => {
+        const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi) || [];
+        const homeIndex = home[0] || null;
+        return { id: i + 1, name: item.name, homeworld: planets[homeIndex] };
+      });
+      this.setState({
+        cardList: [...peoples],
+        currentPage: currentPage,
+        view: viewMode.main,
+      });
+    });
+  };
+
   render() {
     const { view, cardList } = this.state;
     return (
       <div className="st-wars">
-        <div className="st-wars__nav">
-          <Navigation view={view} updateState={this.updateState} />
+        {view === viewMode.load && <Preloader />}
+        <div
+          className={`st-wars__cont${
+            view === viewMode.load ? ' st-wars_hidden' : ''
+          }`}
+        >
+          <div className="st-wars__nav">
+            <Navigation view={view} updateState={this.updateState} />
+          </div>
+          <div className="st-wars__list">
+            <List cardList={cardList} />
+          </div>
+          <div className="">
+            <Pagination
+              totalRecords={100}
+              pageLimit={10}
+              pageNeighbours={1}
+              onPageChanged={this.onPageChanged}
+            />
+          </div>
+          <Sprite />
         </div>
-        <div className="st-wars__list">
-          <List cardList={cardList} />
-        </div>
-        <div className="">
-          <Pagination
-            totalRecords={100}
-            pageLimit={10}
-            pageNeighbours={1}
-            onPageChanged={this.onPageChanged}
-          />
-        </div>
-        <Sprite />
       </div>
     );
   }
