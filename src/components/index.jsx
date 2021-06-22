@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import Pagination from '../common/Pagination';
+import Sprite from '../common/Sprite';
 import Navigation from './Navigation';
 import List from './List';
 
@@ -67,6 +69,15 @@ class Template extends Component {
         <div className="st-wars__list">
           <List />
         </div>
+        <div className="">
+          <Pagination
+            totalRecords={100}
+            pageLimit={10}
+            pageNeighbours={1}
+            // onPageChanged={this.onPageChanged}
+          />
+        </div>
+        <Sprite />
       </div>
     );
   }
