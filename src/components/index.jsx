@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 
-import Favorites from './Favorites';
 import Navigation from './Navigation';
-import Card from './Card';
+import List from './List';
 
-import { lang, langData, viewMode, navigation } from '../constants';
+import { lang, langData, viewMode } from '../constants';
 
 import '../scss/normalize.scss';
 import './main.scss';
-import { map } from 'jquery';
 
 class Template extends Component {
   constructor(props) {
@@ -16,16 +14,36 @@ class Template extends Component {
     this.state = { view: viewMode.main };
   }
 
-  // componentDidMount = () => {
-  //   console.log(window.history);
-  // };
+  componentDidMount = () => {
+    this.getData().then((resp) => {
+      console.log(resp);
+    });
+  };
 
-  // componentDidUpdate = (_, prevState) => {
-  //   const { view } = this.state;
-  //   if (prevState.view !== view) {
-  //     this.changeView();
-  //   }
-  // };
+  getData = async (method = '', data = false) => {
+    const resp = await fetch(
+      `https://swapi.dev/api/people/${method}`,
+      data
+        ? {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data),
+          }
+        : {},
+    );
+    if (!resp?.ok) {
+      this.setState({ view: viewMode.error });
+      throw new Error(
+        `ответ по запросу https://swapi.dev/api/people/${method} имеет статус ${resp.status}`,
+      );
+    }
+    return resp.json();
+  };
 
   changeView = () => {
     const { history } = window;
@@ -43,7 +61,12 @@ class Template extends Component {
     const { view } = this.state;
     return (
       <div className="st-wars">
-        <Navigation view={view} updateState={this.updateState} />
+        <div className="st-wars__nav">
+          <Navigation view={view} updateState={this.updateState} />
+        </div>
+        <div className="st-wars__list">
+          <List />
+        </div>
       </div>
     );
   }
