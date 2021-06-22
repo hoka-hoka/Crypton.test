@@ -5,7 +5,7 @@ import Sprite from '../common/Sprite';
 import Navigation from './Navigation';
 import List from './List';
 
-import { lang, langData, viewMode } from '../constants';
+import { lang, langData, viewMode, planets } from '../constants';
 
 import '../scss/normalize.scss';
 import './main.scss';
@@ -13,12 +13,27 @@ import './main.scss';
 class Template extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: viewMode.main };
+    this.state = { view: viewMode.main, cardList: [] };
   }
 
-  componentDidMount = () => {
+  createDefaultCardList = () => {
     this.getData().then((resp) => {
-      console.log(resp);
+      if (!resp?.results) {
+        return;
+      }
+      const peoples = Array.from(resp.results, (item, i) => {
+        const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi) || [];
+        const homeIndex = home[0] || null;
+        return { name: item.name, homeworld: planets[homeIndex] };
+      });
+      this.setState({ cardList: [...peoples] });
+    });
+  };
+
+  componentDidMount = () => {
+    this.createDefaultCardList();
+    this.getData().then((resp) => {
+      // console.log(resp);
     });
   };
 
@@ -57,6 +72,10 @@ class Template extends Component {
       return this.state;
     }
     return (params) => this.setState(params);
+  };
+
+  onPageChanged = (data) => {
+    const { currentPage, totalPages, pageLimit } = data;
   };
 
   render() {
