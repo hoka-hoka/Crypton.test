@@ -24,7 +24,7 @@ class Template extends Component {
       const peoples = Array.from(resp.results, (item, i) => {
         const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi) || [];
         const homeIndex = home[0] || null;
-        return { name: item.name, homeworld: planets[homeIndex] };
+        return { id: i + 1, name: item.name, homeworld: planets[homeIndex] };
       });
       this.setState({ cardList: [...peoples] });
     });
@@ -79,14 +79,14 @@ class Template extends Component {
   };
 
   render() {
-    const { view } = this.state;
+    const { view, cardList } = this.state;
     return (
       <div className="st-wars">
         <div className="st-wars__nav">
           <Navigation view={view} updateState={this.updateState} />
         </div>
         <div className="st-wars__list">
-          <List />
+          <List cardList={cardList} />
         </div>
         <div className="">
           <Pagination

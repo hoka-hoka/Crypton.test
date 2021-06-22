@@ -1,8 +1,10 @@
-const lang = ['Главная', 'Любимые герои'];
+const lang = ['Главная', 'Любимые герои', 'Имя', 'Планета'];
 
 const langData = {
   main: 0,
   favorites: 1,
+  name: 2,
+  homeworld: 3,
 };
 
 const viewMode = {
