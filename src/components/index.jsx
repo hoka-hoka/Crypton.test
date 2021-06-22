@@ -16,8 +16,9 @@ class Template extends Component {
     this.state = { view: viewMode.main, cardList: [] };
   }
 
-  createDefaultCardList = () => {
-    this.getData().then((resp) => {
+  onPageChanged = (data = { currentPage: '1' }) => {
+    const { currentPage } = data;
+    this.getData(`?page=${currentPage}`).then((resp) => {
       if (!resp?.results) {
         return;
       }
@@ -26,12 +27,12 @@ class Template extends Component {
         const homeIndex = home[0] || null;
         return { id: i + 1, name: item.name, homeworld: planets[homeIndex] };
       });
-      this.setState({ cardList: [...peoples] });
+      this.setState({ cardList: [...peoples], currentPage: currentPage });
     });
   };
 
   componentDidMount = () => {
-    this.createDefaultCardList();
+    this.onPageChanged();
     this.getData().then((resp) => {
       // console.log(resp);
     });
@@ -74,10 +75,6 @@ class Template extends Component {
     return (params) => this.setState(params);
   };
 
-  onPageChanged = (data) => {
-    const { currentPage, totalPages, pageLimit } = data;
-  };
-
   render() {
     const { view, cardList } = this.state;
     return (
@@ -93,7 +90,7 @@ class Template extends Component {
             totalRecords={100}
             pageLimit={10}
             pageNeighbours={1}
-            // onPageChanged={this.onPageChanged}
+            onPageChanged={this.onPageChanged}
           />
         </div>
         <Sprite />
