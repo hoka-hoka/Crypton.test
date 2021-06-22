@@ -1,0 +1,16 @@
+.nav {
+  display: flex;
+
+  &__link {
+    margin-right: 20px;
+
+    &:last-of-type {
+      margin-right: unset;
+    }
+
+    &_active {
+      color: $black;
+      pointer-events: none;
+    }
+  }
+}
