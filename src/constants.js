@@ -1,10 +1,12 @@
-const lang = ['Главная', 'Любимые герои', 'Имя', 'Планета'];
+const lang = ['Главная', 'Любимые герои', 'Имя', 'Планета', 'Поиск', 'Найти'];
 
 const langData = {
   main: 0,
   favorites: 1,
   name: 2,
   homeworld: 3,
+  search: 4,
+  find: 5,
 };
 
 const baseUrls = {

@@ -20,13 +20,11 @@ export default class Pagination extends Component {
     this.gotoPage(1);
   }
 
-  componentDidUpdate() {
-    const { currentPage } = this.state;
-    const { rebuild, totalRecords } = this.props;
+  componentDidUpdate(prevProps) {
+    const { totalRecords } = this.props;
     this.totalPages = Math.ceil(totalRecords / this.pageLimit);
-    if (rebuild) {
-      this.gotoPage(currentPage);
-    }
+
+    console.log(totalRecords);
   }
 
   gotoPage = (page) => {
@@ -119,6 +117,7 @@ export default class Pagination extends Component {
   render() {
     if (!this.totalRecords || this.totalPages === 1) return null;
     const { currentPage } = this.state;
+
     return (
       <ul className="pagination" aria-label="Countries Pagination">
         {this.fetchPageNumbers().map((page, index) => {

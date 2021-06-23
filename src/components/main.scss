@@ -6,4 +6,50 @@
   &__cont {
     padding: 0 140px;
   }
+
+  &__wrap {
+    display: flex;
+  }
+
+  &__pagination {
+    margin-top: 20px;
+    & ul {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+.pagination {
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: $black-50;
+    border-radius: 50%;
+    cursor: pointer;
+    font: {
+      family: $mainFont;
+      size: rem(16);
+    }
+
+    &_active {
+      color: white;
+      background: linear-gradient(180deg, $purple, $violet);
+    }
+
+    svg {
+      fill: white;
+    }
+
+    &_painted {
+      background: linear-gradient(180deg, $lime, $aqua);
+    }
+
+    &_turned {
+      transform: rotateY(180deg);
+    }
+  }
 }

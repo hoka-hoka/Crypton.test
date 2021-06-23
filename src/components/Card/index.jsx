@@ -19,7 +19,6 @@ const Card = ({ card, cardFavorites, updateState }) => {
   };
 
   const updateFavoriteList = (isActive) => {
-    console.log(isActive);
     if (isActive) {
       recordToFavorites();
     } else {

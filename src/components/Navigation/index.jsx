@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter, NavLink } from 'react-router-dom';
-import { navigation, viewMode } from '../../constants';
+import React, { useEffect } from 'react';
+import { BrowserRouter, NavLink, useHistory } from 'react-router-dom';
+import { navigation } from '../../constants';
 
 import './Navigation.scss';
 
-const Navigation = ({ view, updateState }) => {
+const Navigation = ({ view, updateState, cardFavorites }) => {
   const changeView = (index) => {
     updateState({ update: true })({ view: navigation[index].view });
   };

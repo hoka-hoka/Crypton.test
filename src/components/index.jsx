@@ -1,33 +1,55 @@
 import React, { Component } from 'react';
 
-import Pagination from '../common/Pagination';
+// import Pagination from '../common/Pagination';
+import ReactPaginate from 'react-paginate';
 import Sprite from '../common/Sprite';
 import Preloader from '../common/Preloader';
 import Navigation from './Navigation';
 import List from './List';
+import Search from './Search';
 
-import { lang, langData, viewMode, planets, baseUrls } from '../constants';
+import { viewMode, baseUrls, planets } from '../constants';
 
 import '../scss/normalize.scss';
 import './main.scss';
+
 class Template extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: viewMode.load, cardList: [], cardFavorites: [] };
+    this.state = {
+      view: viewMode.load,
+      cardList: [],
+      cardFavorites: [],
+      filtered: [],
+    };
   }
 
-  // componentDidMount = () => {
-  //   const history = window.history.state;
-  //   this.setState({ cardFavorites: history?.cardFavorites || [] });
-  // };
+  componentDidMount = () => {
+    this.onPageChanged();
+  };
 
-  // componentDidUpdate = (_, prevState) => {
-  //   const { cardFavorites } = this.state;
-  //   if (cardFavorites.length && prevState.cardFavorites != cardFavorites) {
-  //     console.log('123');
-  //     window.history.pushState({ cardFavorites: [...cardFavorites] }, '', '');
-  //   }
-  // };
+  updateFavorites = (prevState) => {
+    const { cardFavorites } = this.state;
+    if (cardFavorites.length && prevState.cardFavorites != cardFavorites) {
+      window.history.pushState({ cardFavorites: [...cardFavorites] }, '', '');
+    }
+  };
+
+  updateTotalRecord = (prevState) => {
+    const { view, cardFavorites, filtered } = this.state;
+    if (prevState.view != view) {
+      if (view === viewMode.main) {
+        this.setState({ totalRecords: filtered.length / 10 || 9 });
+      } else {
+        this.setState({ totalRecords: cardFavorites.length / 10 });
+      }
+    }
+  };
+
+  componentDidUpdate = (_, prevState) => {
+    this.updateFavorites(prevState);
+    this.updateTotalRecord(prevState);
+  };
 
   getData = async ({ baseUrl = baseUrls.apiURL, method = '', data = {} }) => {
     const resp = await fetch(`${baseUrl}${method}`, data);
@@ -66,13 +88,13 @@ class Template extends Component {
     }
   };
 
-  onPageChanged = (data = { currentPage: '1' }) => {
-    const { currentPage } = data;
+  onPageChanged = (data = { selected: 0 }) => {
+    const { selected } = data;
     this.setState({ view: viewMode.load });
     this.getData({
       data: {},
       baseUrl: baseUrls.apiURL,
-      method: `?page=${currentPage}`,
+      method: `?page=${selected + 1}`,
     }).then((resp) => {
       if (!resp?.results) {
         return;
@@ -81,7 +103,6 @@ class Template extends Component {
         const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi)[0];
         const homeworld = planets[home];
         const image = this.prepareLinkToImage(item.url);
-
         return {
           homeworld,
           id: image.id,
@@ -91,17 +112,25 @@ class Template extends Component {
       });
       this.setState({
         cardList: [...peoples],
-        currentPage: currentPage,
       });
       this.changeView();
     });
   };
 
+  getCardList = () => {
+    const { view, cardList, cardFavorites, filtered } = this.state;
+    if (view === viewMode.main) {
+      return filtered.length ? filtered : cardList;
+    }
+    return cardFavorites;
+  };
+
   render() {
-    const { view, cardList, cardFavorites } = this.state;
+    const { view, totalRecords, cardList, cardFavorites } = this.state;
     if (view === viewMode.error) {
       return false;
     }
+
     return (
       <div className="st-wars">
         {view === viewMode.load && <Preloader />}
@@ -111,21 +140,37 @@ class Template extends Component {
           }`}
         >
           <div className="st-wars__nav">
-            <Navigation view={view} updateState={this.updateState} />
+            <Navigation
+              view={view}
+              updateState={this.updateState}
+              cardFavorites={cardFavorites}
+            />
           </div>
-          <div className="st-wars__list">
+          <div className="st-wars__wrap">
             <List
-              cardList={view === viewMode.main ? cardList : cardFavorites}
+              cardList={this.getCardList()}
               cardFavorites={cardFavorites}
               updateState={this.updateState}
             />
+            <Search
+              cardList={cardList}
+              getData={this.getData}
+              updateState={this.updateState}
+            />
+            {/* <Filter /> */}
           </div>
-          <div className="">
-            <Pagination
-              totalRecords={view === viewMode.main ? 90 : cardFavorites.length}
-              pageLimit={10}
-              pageNeighbours={1}
-              onPageChanged={this.onPageChanged}
+
+          <div className="st-wars__pagination">
+            <ReactPaginate
+              pageCount={totalRecords}
+              pageRangeDisplayed="10"
+              marginPagesDisplayed="1"
+              activeClassName="pagination__btn_active"
+              previousClassName="pagination__btn_prev"
+              nextClassName="pagination__btn_next"
+              pageClassName="pagination__btn"
+              pageLinkClassName="pagination__link"
+              onPageChange={this.onPageChanged}
             />
           </div>
           <Sprite />
