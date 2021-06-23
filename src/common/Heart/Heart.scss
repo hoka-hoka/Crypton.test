@@ -1,17 +1,14 @@
 .heart {
-  &:checked ~ label {
-    &:before {
-      content: '\e803';
-    }
-  }
-
   &__lab {
-    cursor: pointer;
-
     &:before {
       font-size: rem(14);
       font-family: $symFont;
+      cursor: pointer;
       content: '\e802';
+    }
+
+    &_active:before {
+      content: '\e803';
     }
   }
 

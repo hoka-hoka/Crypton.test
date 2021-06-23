@@ -4,7 +4,7 @@ import { navigation } from '../../constants';
 
 import './Navigation.scss';
 
-const Navigation = ({ view, updateState, cardFavorites }) => {
+const Navigation = ({ updateState }) => {
   const changeView = (index) => {
     updateState({ update: true })({ view: navigation[index].view });
   };
@@ -28,10 +28,6 @@ const Navigation = ({ view, updateState, cardFavorites }) => {
       </BrowserRouter>
     </nav>
   );
-};
-
-Navigation.defaultProps = {
-  view: '',
 };
 
 export default Navigation;

@@ -6,7 +6,7 @@ import './Card.scss';
 const Card = ({ card, cardFavorites, updateState }) => {
   const recordToFavorites = () => {
     const favorites = [...cardFavorites];
-    favorites.push(card);
+    favorites.push({ ...card, like: true });
     favorites.sort((a, b) => a.id - b.id);
     updateState({ update: true })({ cardFavorites: [...favorites] });
   };
@@ -29,6 +29,7 @@ const Card = ({ card, cardFavorites, updateState }) => {
   return (
     <>
       <Heart
+        defaultActive={card.like}
         forId={card.id}
         callback={(isActive) => updateFavoriteList(isActive)}
       />

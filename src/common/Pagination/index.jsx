@@ -23,8 +23,6 @@ export default class Pagination extends Component {
   componentDidUpdate(prevProps) {
     const { totalRecords } = this.props;
     this.totalPages = Math.ceil(totalRecords / this.pageLimit);
-
-    console.log(totalRecords);
   }
 
   gotoPage = (page) => {

@@ -1,12 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Heart.scss';
 
-const Heart = ({ forId, callback }) => {
-  const active = useRef(false);
+const Heart = ({ forId, defaultActive, callback }) => {
+  const [active, setActive] = useState(defaultActive || false);
+  const bubbling = useRef(defaultActive || false);
 
   const favoriteHandler = () => {
-    active.current = !active.current;
-    callback(active.current);
+    setActive((prevState) => !prevState);
+    bubbling.current = !bubbling.current;
+    callback(bubbling.current);
   };
 
   return (
@@ -17,7 +19,10 @@ const Heart = ({ forId, callback }) => {
         type="checkbox"
         onClick={favoriteHandler}
       />
-      <label className="heart__lab" htmlFor={forId} />
+      <label
+        className={`heart__lab${active ? ' heart__lab_active' : ''}`}
+        htmlFor={forId}
+      />
     </div>
   );
 };

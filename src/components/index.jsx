@@ -39,9 +39,9 @@ class Template extends Component {
     const { view, cardFavorites, filtered } = this.state;
     if (prevState.view != view) {
       if (view === viewMode.main) {
-        this.setState({ totalRecords: filtered.length / 10 || 9 });
+        this.setState({ totalRecords: Math.floor(filtered.length / 10) || 9 });
       } else {
-        this.setState({ totalRecords: cardFavorites.length / 10 });
+        this.setState({ totalRecords: Math.floor(cardFavorites.length / 10) });
       }
     }
   };
@@ -140,15 +140,11 @@ class Template extends Component {
           }`}
         >
           <div className="st-wars__nav">
-            <Navigation
-              view={view}
-              updateState={this.updateState}
-              cardFavorites={cardFavorites}
-            />
+            <Navigation updateState={this.updateState} />
           </div>
           <div className="st-wars__wrap">
             <List
-              cardList={this.getCardList()}
+              list={this.getCardList()}
               cardFavorites={cardFavorites}
               updateState={this.updateState}
             />

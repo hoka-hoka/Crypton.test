@@ -29,7 +29,7 @@ const Search = ({ cardList, getData, updateState }) => {
 
       updateState({ update: true })({
         filtered: [...foundCard],
-        totalRecords: foundCard.length / 10,
+        totalRecords: Math.floor(foundCard.length / 10),
       });
     });
   };
