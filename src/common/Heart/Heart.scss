@@ -1,0 +1,29 @@
+.heart {
+  &:checked ~ label {
+    &:before {
+      content: '\e803';
+    }
+  }
+
+  &__lab {
+    cursor: pointer;
+
+    &:before {
+      font-size: rem(14);
+      font-family: $symFont;
+      content: '\e802';
+    }
+  }
+
+  &_hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+  }
+}

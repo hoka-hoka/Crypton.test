@@ -13,7 +13,7 @@ import './main.scss';
 class Template extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: viewMode.load, cardList: [] };
+    this.state = { view: viewMode.load, cardList: [], cardFavorites: [] };
   }
 
   componentDidMount = () => {};
@@ -39,7 +39,10 @@ class Template extends Component {
   prepareLinkToImage = (imgUrl) => {
     const image = imgUrl.match(/(?!=people\/)\d+(?=\/)/gi) || [];
     const imageIndex = image[0] || '';
-    const rezult = `${baseUrls.imgsURL}${imageIndex}.jpg`;
+    const rezult = {
+      id: imageIndex,
+      url: `${baseUrls.imgsURL}${imageIndex}.jpg`,
+    };
     return rezult;
   };
 
@@ -60,9 +63,9 @@ class Template extends Component {
         const image = this.prepareLinkToImage(item.url);
 
         return {
-          image,
           homeworld,
-          id: i + 1,
+          id: image.id,
+          image: image.url,
           name: item.name,
         };
       });
@@ -75,7 +78,7 @@ class Template extends Component {
   };
 
   render() {
-    const { view, cardList } = this.state;
+    const { view, cardList, cardFavorites } = this.state;
     if (view === viewMode.error) {
       return false;
     }
@@ -91,7 +94,11 @@ class Template extends Component {
             <Navigation view={view} updateState={this.updateState} />
           </div>
           <div className="st-wars__list">
-            <List cardList={cardList} />
+            <List
+              cardList={cardList}
+              cardFavorites={cardFavorites}
+              updateState={this.updateState}
+            />
           </div>
           <div className="">
             <Pagination
