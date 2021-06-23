@@ -1,4 +1,12 @@
-const lang = ['Главная', 'Любимые герои', 'Имя', 'Планета', 'Поиск', 'Найти'];
+const lang = [
+  'Главная',
+  'Любимые герои',
+  'Имя',
+  'Планета',
+  'Поиск',
+  'Найти',
+  'Фильтр',
+];
 
 const langData = {
   main: 0,
@@ -7,6 +15,7 @@ const langData = {
   homeworld: 3,
   search: 4,
   find: 5,
+  filter: 6,
 };
 
 const baseUrls = {
@@ -37,6 +46,24 @@ const navigation = [
     view: lang[langData.favorites],
   },
 ];
+
+const filter = {
+  gender: [
+    {
+      id: '1',
+      action: true,
+      idFor: 'male',
+      labText: 'male',
+      name: 'male',
+    },
+    {
+      id: 2,
+      idFor: 'female',
+      labText: 'female',
+      name: 'female',
+    },
+  ],
+};
 
 const planets = [
   'Tatooine',
@@ -100,4 +127,4 @@ const planets = [
   'Umbara',
 ];
 
-export { lang, langData, viewMode, navigation, planets, baseUrls };
+export { lang, langData, viewMode, navigation, planets, baseUrls, filter };

@@ -7,6 +7,7 @@ import Preloader from '../common/Preloader';
 import Navigation from './Navigation';
 import List from './List';
 import Search from './Search';
+import Filter from './Filter';
 
 import { viewMode, baseUrls, planets } from '../constants';
 
@@ -90,7 +91,7 @@ class Template extends Component {
 
   onPageChanged = (data = { selected: 0 }) => {
     const { selected } = data;
-    this.setState({ view: viewMode.load });
+    this.setState({ view: viewMode.load, selected: data.selected });
     this.getData({
       data: {},
       baseUrl: baseUrls.apiURL,
@@ -126,7 +127,13 @@ class Template extends Component {
   };
 
   render() {
-    const { view, totalRecords, cardList, cardFavorites } = this.state;
+    const {
+      view,
+      totalRecords,
+      cardList,
+      cardFavorites,
+      selected,
+    } = this.state;
     if (view === viewMode.error) {
       return false;
     }
@@ -148,27 +155,36 @@ class Template extends Component {
               cardFavorites={cardFavorites}
               updateState={this.updateState}
             />
-            <Search
-              cardList={cardList}
-              getData={this.getData}
-              updateState={this.updateState}
-            />
-            {/* <Filter /> */}
+            {view != viewMode.favorites && (
+              <div className="st-wars__bar">
+                <Search
+                  cardList={cardList}
+                  getData={this.getData}
+                  updateState={this.updateState}
+                />
+                {/* <Filter
+                  list={this.getCardList()}
+                  updateState={this.updateState}
+                /> */}
+              </div>
+            )}
           </div>
-
-          <div className="st-wars__pagination">
-            <ReactPaginate
-              pageCount={totalRecords}
-              pageRangeDisplayed="10"
-              marginPagesDisplayed="1"
-              activeClassName="pagination__btn_active"
-              previousClassName="pagination__btn_prev"
-              nextClassName="pagination__btn_next"
-              pageClassName="pagination__btn"
-              pageLinkClassName="pagination__link"
-              onPageChange={this.onPageChanged}
-            />
-          </div>
+          {view != viewMode.favorites && (
+            <div className="st-wars__pagination">
+              <ReactPaginate
+                initialPage={selected}
+                pageCount={totalRecords}
+                onPageChange={this.onPageChanged}
+                pageRangeDisplayed="10"
+                marginPagesDisplayed="1"
+                activeClassName="pagination__btn_active"
+                previousClassName="pagination__btn_prev"
+                nextClassName="pagination__btn_next"
+                pageClassName="pagination__btn"
+                pageLinkClassName="pagination__link"
+              />
+            </div>
+          )}
           <Sprite />
         </div>
       </div>

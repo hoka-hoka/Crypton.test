@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { lang, langData } from '../../constants';
 import Card from '../Card';
 import './List.scss';
 
