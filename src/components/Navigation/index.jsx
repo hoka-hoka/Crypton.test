@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, NavLink } from 'react-router-dom';
-import { navigation } from '../../constants';
+import { navigation, viewMode } from '../../constants';
 
 import './Navigation.scss';
 

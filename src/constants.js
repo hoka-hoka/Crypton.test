@@ -31,7 +31,7 @@ const navigation = [
     id: 2,
     alias: lang[langData.favorites],
     name: 'Любимые герои',
-    ref: '/home',
+    ref: '/favorites',
     view: lang[langData.favorites],
   },
 ];

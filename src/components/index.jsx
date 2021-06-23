@@ -16,8 +16,6 @@ class Template extends Component {
     this.state = { view: viewMode.load, cardList: [], cardFavorites: [] };
   }
 
-  componentDidMount = () => {};
-
   getData = async ({ baseUrl = baseUrls.apiURL, method = '', data = {} }) => {
     const resp = await fetch(`${baseUrl}${method}`, data);
     if (!resp?.ok) {
@@ -46,6 +44,15 @@ class Template extends Component {
     return rezult;
   };
 
+  changeView = () => {
+    const isFavoritesView = document.location.pathname.search('favorites');
+    if (~isFavoritesView) {
+      this.setState({ view: viewMode.favorites });
+    } else {
+      this.setState({ view: viewMode.main });
+    }
+  };
+
   onPageChanged = (data = { currentPage: '1' }) => {
     const { currentPage } = data;
     this.setState({ view: viewMode.load });
@@ -72,8 +79,8 @@ class Template extends Component {
       this.setState({
         cardList: [...peoples],
         currentPage: currentPage,
-        view: viewMode.main,
       });
+      this.changeView();
     });
   };
 
@@ -95,14 +102,14 @@ class Template extends Component {
           </div>
           <div className="st-wars__list">
             <List
-              cardList={cardList}
+              cardList={view === viewMode.main ? cardList : cardFavorites}
               cardFavorites={cardFavorites}
               updateState={this.updateState}
             />
           </div>
           <div className="">
             <Pagination
-              totalRecords={90}
+              totalRecords={view === viewMode.main ? 90 : cardFavorites.length}
               pageLimit={10}
               pageNeighbours={1}
               onPageChanged={this.onPageChanged}
