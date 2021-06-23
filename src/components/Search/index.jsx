@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { lang, langData, baseUrls } from '../../constants';
+import { lang, langData, baseUrls, planets } from '../../constants';
 import './Search.scss';
 
 const Search = ({ cardList, getData, updateState }) => {
@@ -8,6 +8,16 @@ const Search = ({ cardList, getData, updateState }) => {
   const writeWord = (event) => {
     const { value } = event.target;
     setWord(value);
+  };
+
+  const prepareLinkToImage = (imgUrl) => {
+    const image = imgUrl.match(/(?!=people\/)\d+(?=\/)/gi) || [];
+    const imageIndex = image[0] || '';
+    const rezult = {
+      id: imageIndex,
+      url: `${baseUrls.imgsURL}${imageIndex}.jpg`,
+    };
+    return rezult;
   };
 
   const findByWord = () => {
@@ -21,11 +31,17 @@ const Search = ({ cardList, getData, updateState }) => {
         return;
       }
 
-      const copyCardList = [...cardList];
-
-      const foundCard = copyCardList.filter((card) =>
-        resp.results.find((item) => item.name === card.name),
-      );
+      const foundCard = Array.from(resp.results, (item, i) => {
+        const home = item.homeworld.match(/(?!=planets\/)\d+(?=\/)/gi)[0];
+        const homeworld = planets[home];
+        const image = prepareLinkToImage(item.url);
+        return {
+          homeworld,
+          id: image.id,
+          image: image.url,
+          name: item.name,
+        };
+      });
 
       updateState({ update: true })({
         filtered: [...foundCard],
