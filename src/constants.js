@@ -7,6 +7,11 @@ const langData = {
   homeworld: 3,
 };
 
+const baseUrls = {
+  apiURL: 'https://swapi.dev/api/people/',
+  imgsURL: 'https://starwars-visualguide.com/assets/img/characters/',
+};
+
 const viewMode = {
   none: 'none',
   load: 'loading',
@@ -93,4 +98,4 @@ const planets = [
   'Umbara',
 ];
 
-export { lang, langData, viewMode, navigation, planets };
+export { lang, langData, viewMode, navigation, planets, baseUrls };

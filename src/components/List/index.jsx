@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { lang, langData } from '../../constants';
+import Card from '../Card';
 import './List.scss';
 
 const List = ({ cardList }) => {
@@ -8,12 +9,7 @@ const List = ({ cardList }) => {
     <div className="list">
       {cardList.map((card) => (
         <div className="list__item" key={card.id}>
-          <div className="list__name">{`${lang[langData.name]}: ${
-            card.name
-          }`}</div>
-          <div className="list__homeworld">{`${lang[langData.homeworld]}: ${
-            card.homeworld
-          }`}</div>
+          <Card card={card} />
         </div>
       ))}
     </div>
