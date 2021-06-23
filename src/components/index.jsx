@@ -16,6 +16,19 @@ class Template extends Component {
     this.state = { view: viewMode.load, cardList: [], cardFavorites: [] };
   }
 
+  // componentDidMount = () => {
+  //   const history = window.history.state;
+  //   this.setState({ cardFavorites: history?.cardFavorites || [] });
+  // };
+
+  // componentDidUpdate = (_, prevState) => {
+  //   const { cardFavorites } = this.state;
+  //   if (cardFavorites.length && prevState.cardFavorites != cardFavorites) {
+  //     console.log('123');
+  //     window.history.pushState({ cardFavorites: [...cardFavorites] }, '', '');
+  //   }
+  // };
+
   getData = async ({ baseUrl = baseUrls.apiURL, method = '', data = {} }) => {
     const resp = await fetch(`${baseUrl}${method}`, data);
     if (!resp?.ok) {

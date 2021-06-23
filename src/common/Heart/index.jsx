@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import './Heart.scss';
 
 const Heart = ({ forId, callback }) => {
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    callback(active);
-  }, [active]);
+  const active = useRef(false);
 
   const favoriteHandler = () => {
-    setActive((prevState) => !prevState);
+    active.current = !active.current;
+    callback(active.current);
   };
 
   return (
